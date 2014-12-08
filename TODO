@@ -1,0 +1,24 @@
+# Explain the disk layout - what is the first 17.4kB of a Tails GPT formatted
+# USB disk?  Verify mode - given ISO - match Tails release and verify
+#
+# Dependencies to install with apt-get:
+# md5deep myrescue syslinux bsdiff parted
+#
+# Verify mode - given device (/dev/sdXXX) - match Tails release
+#
+# Forensics mode - given device - make image file and verify
+# Verify mode - verify boot record
+# Verify signatures - ensure that signature for Tails release is known and
+#                     matches public signatures
+# Verify IUK files - ensure that IUK is correct
+# List mode - Display list of all known local releases
+# List mode remote - Display list of all known remote releases
+# Mirror mode - Download all signatures, iuk files and iso files
+# Mirror mode - Download only specific release
+# Generate mode - Generate list of hashes from local mirror
+# Download mode - Download Tails release and verify signature
+# Verify bootloader
+# Verify each filesystem
+# Verify partition layout (We expect GPT)
+# Verify each file system
+# Inspect partition table
