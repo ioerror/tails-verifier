@@ -1,0 +1,17 @@
+To collect hashes, we use hashdeep. For each Tails release, we create two mount
+points:
+
+  VERSION=1.2.1
+  mkdir -p /mnt/tails-i386-$VERSION/{boot,squashfs}
+  mount -o ro,loop tails-verifier/iso/tails-i386-$VERSION.iso /mnt/tails-i386-$VERSION/boot/
+  mount -o ro,loop /mnt/tails-i386-$VERSION/boot/live/filesystem.squashfs /mnt/tails-i386-$VERSION/squashfs/
+
+We collect the hashes like so (as root, what could possibly go wrong?!):
+
+  hashdeep /mnt/tails-i386-$VERSION/ -o f -l -r > tails-verifier/data/tails-i386-$VERSION.hashes.txt
+
+We then unmount each loopback mount:
+
+  umount /mnt/tails-i386-$VERSION/squashfs
+  umount /mnt/tails-i386-$VERSION/boot
+
