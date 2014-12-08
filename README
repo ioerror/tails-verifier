@@ -1,4 +1,4 @@
-tails-verifier: a tool for forensic analysis of Tails systems
+tails-verifier: a tool and dataset for forensic analysis of Tails systems
 
 This program contains a copy of every known signature for every
 Tails release, as well as hashes of every file ever shipped to Tails
