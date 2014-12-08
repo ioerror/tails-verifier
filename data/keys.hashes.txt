@@ -1,0 +1,6 @@
+%%%% HASHDEEP-1.0
+%%%% size,md5,sha256,filename
+## Invoked from: /home/error/Documents/tails-verifier
+## $ hashdeep -o f -b -r keys/
+## 
+193044,c64f8f7fab8f38a1171308b65e4964a6,aa4ac9313d562c901ddeca1b32b4d539d1e3476c575da554a9b6ccaa3d8305eb,tails-signing.key
