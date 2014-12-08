@@ -15,3 +15,7 @@ We then unmount each loopback mount:
   umount /mnt/tails-i386-$VERSION/squashfs
   umount /mnt/tails-i386-$VERSION/boot
 
+To collect hashes for other files such as iuk and iso files, we do the following:
+
+  hashdeep -o f -b -r iuk/ > tails-verifier/data/iuk.hashes.txt
+
