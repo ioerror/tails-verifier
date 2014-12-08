@@ -1,0 +1,95 @@
+Verification of a Tails disk is extremely fraught with peril.
+
+To verify a downloaded Tails release is correct, one merely needs to verify
+that the detached GnuPG signature is valid for a given release. This process is
+deterministic and straight forward.
+
+Hashes of ISO files do not match burned CDs or DVDs:
+
+Burning a CD or DVD of a Tails release from an ISO file will result in a CD or
+DVD that has a different hash than the ISO file.
+
+Burning a Tails release twice with the same equipment will ensure that the CD
+or DVD is identical as seen by GNU/Linux's /dev/sr0 device. If the same Tails
+release is burned with different equipment, the resulting CD or DVD will be
+identical as seen by GNU/Linux's /dev/sr0 device.  If the CD/DVD is imaged as a
+file, the resulting file will have extra data appended to the end of the image.
+
+As an example for the Tails 1.2 ISO file - it is 948713472 bytes in length but
+when extracted from the /dev/sr0 device, it is 948731904, a full 18432 bytes of
+zeros.
+
+If the exact release is known, it is possible truncate the disk image to the
+release specific byte count. The resulting file should match the original ISO
+and the GnuPG signature should verify.
+
+The following trailer sizes have been observed in the wild for Tails 1.2:
+
+  18432 bytes (Lenovo internal DVD burner - Model: HL-DT-ST DVDRAM GSA-U10N 1.05)
+  18432 bytes (Samsung USB DVD - Model: Portable DVD writer SE-218)
+
+For another version of Tails, the following trailer size was observed:
+
+  22528 bytes (Asus Blu-Ray RW - Model: BW-16D1HT)
+
+
+Each CD/DVD burner leaves behind unique data about the hardware used for making
+the CD/DVD.  Information on the unique identifier:
+
+  https://en.wikipedia.org/wiki/Optical_disc_drive#Recorder_Unique_Identifier
+
+This unique identifier presents a rather serious privacy problem as it ensures
+that it is possible to learn the source of a given Tails DVD.
+
+To install Tails on a USB device requires changing the Tails ISO:
+
+The first step after verification of the signature for the Tails release is to
+modify the ISO file with isohybrid. Sadly, the isohybrid process is
+non-deterministic. This process adds around 5MB of data to the file. This data
+has not been examined in detail but it may also present a similar privacy
+problem found with unique identifiers found on CD/DVDs.
+
+To verify the contents of the disk, simplistic file walking is possible:
+
+Modern Tails releases are often installed on USB devices and such an install
+has a single fat32 file system.  This means that it is possible to mount the
+file system as a read only loopback device and to walk the file system, hashing
+each file available:
+
+  mount -o ro,loop tails-i386-1.2.1.iso /mnt
+
+A Tails 1.2 USB disk has the following partition layout without Persistence:
+
+	Model: Verbatim STORE N GO (scsi)
+	Disk /dev/sdb: 8023MB
+	Sector size (logical/physical): 512B/512B
+	Partition Table: gpt
+
+	Number  Start   End     Size    File system  Name   Flags
+	 1      17.4kB  2621MB  2621MB  fat32        Tails  boot, hidden, legacy_boot
+
+A Tails 0.22-rc1 USB disk has the following partition layout without Persistence:
+
+	Sector size (logical/physical): 512B/512B
+	Partition Table: gpt
+
+	Number  Start   End     Size    File system  Name   Flags
+	 1      17.4kB  2621MB  2621MB  fat32        Tails  legacy_boot
+
+Persistence changes the partition layout:
+
+	Model: Verbatim STORE N GO (scsi)
+	Disk /dev/sdb: 8023MB
+	Sector size (logical/physical): 512B/512B
+	Partition Table: gpt
+
+	Number  Start   End     Size    File system  Name       Flags
+	 1      17.4kB  2621MB  2621MB  fat32        Tails      boot, hidden, legacy_boot
+	 2      2621MB  8022MB  5400MB               TailsData
+
+
+Verification of files does not tell us if the USB device itself is trustworthy.
+The BadUSB research shows that the device itself could be hostile. There is
+currently no known public method for verification. It is possible to use
+libpcap (tcpdump, wireshark, etc) to sniff the USB bus and then to ensure that
+the disk behaves as a normal USB mass storage device.
