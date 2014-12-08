@@ -1,0 +1,7 @@
+This program only runs on Debian GNU/Linux!
+
+Dependencies to install with apt-get:
+
+  md5deep myrescue syslinux parted
+
+At the moment, we're just a dataset - so nothing to install yet.
